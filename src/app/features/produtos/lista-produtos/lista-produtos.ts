@@ -25,7 +25,7 @@ export class ListaProdutos {
   produtoSelecionado = signal <string | null>(null);
 
   carrinho = signal <{nome: string; preco: number}[]>([]);
-
+erro = signal < string | null > (null);
 //?================ COMPUTED ======================
 
   totalProdutos = computed(() => this.produtos().length);
@@ -44,9 +44,11 @@ export class ListaProdutos {
 
   //? ============== MÉTODO HTTP CLIENT (API) ============
 
+
   carregarProdutos(){
 
-    this.carregando.set(true);
+    this.erro.set(null);// limpar o erro antes de fazer a requisição
+    this.carregando.set(true); //! ativar o sinal de carregando
     this.produtosService.buscarProdutos().subscribe({
       next: (dados) => {
         const produtos = this.produtosService.transformarProdutos(dados);
@@ -55,6 +57,7 @@ export class ListaProdutos {
       },
       error: (erro) => {
         console.error('Erro ao carregar produtos: ', erro);
+        this.erro.set('erro ao carregar protudos. Por favor, tente novamente');
         this.carregando.set(false);
       }
     });
