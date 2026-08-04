@@ -26,15 +26,15 @@
 
 <!--estado 1: carregando-->
  @if(carregando()){
-    <p>strong>carregando produtos, aguarde...</strong></p>
+    <p><strong>carregando produtos, aguarde...</strong></p>
  }
 <!--estado 2: erro-->
 @if(erro()){
-    <p><strong style="color:red">{erro()}</strong></p>
-    <button (click)="carregarprodutos()"Tente novamente</button>
+    <p><strong style="color:red">{{erro()}}</strong></p>
+    <button (click)="carregarProdutos()">Tente novamente</button>
 }
 @if (!carregando() && !erro()){
-    <p><strong>Quantidade de produtos:</strong> {{ totalprodutos() }}</p>
+    <p><strong>Quantidade de produtos:</strong> {{ totalProdutos() }}</p>
     <hr>
     @for(item of produtos(); track $index){
         <app-produto
