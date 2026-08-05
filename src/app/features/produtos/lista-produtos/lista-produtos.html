@@ -1,26 +1,3 @@
-<!-- <h2>
-    Produto selecionado:
-    @if(produtoSelecionado()){
-        <strong style="color:orange">{{produtoSelecionado() | uppercase}}</strong>
-    }@else{
-        <span style="color: gray">Nenhum Produto Selecionado 😢</span>
-    }
-</h2>
-@for (item of produtos(); track item){
-    <app-produto 
-    [nome] = "item.nome" 
-    [preco] = "item.preco"
-    (produtoSelecionado)="exibirProduto($event)"
-    >
-    </app-produto>
-    <button (click)="adicionarAoCarrinho(item)">Adicionar ao carrinho</button>
-}
-<hr>
-<p><button (click)="adicionarProduto()">Adicionar Produto</button></p>
-<p><button (click)="substituirProdutos()">Substituir Produto</button></p>
-<hr>
-<h2>total de Produtos: {{totalProdutos()}}</h2>
-<h3>Valor Total: {{valorTotal() | precoFormatado}}</h3> -->
 
 <h2>Produtos</h2>
 
@@ -40,6 +17,8 @@
         <app-produto
         [nome]="item.nome"
         [preco]="item.preco"
+        (produtoSelecionado)="exibirProduto($event)"
+        (produtoAdicionado)="adicionarAoCarrinho($event)"
         >
         </app-produto>
     }
