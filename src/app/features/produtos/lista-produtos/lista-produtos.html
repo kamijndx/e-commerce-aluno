@@ -1,6 +1,5 @@
 
 <h2>Produtos</h2>
-
 <!--estado 1: carregando-->
  @if(carregando()){
     <p><strong>carregando produtos, aguarde...</strong></p>
@@ -12,8 +11,8 @@
 }
 @if (!carregando() && !erro()){
     <p><strong>Quantidade de produtos:</strong> {{ totalProdutos() }}</p>
-    <hr>
-    @for(item of produtos(); track $index){
+<section class="grid-produtos">
+ @for(item of produtos(); track $index){
         <app-produto
         [nome]="item.nome"
         [preco]="item.preco"
@@ -21,7 +20,8 @@
         (produtoAdicionado)="adicionarAoCarrinho($event)"
         >
         </app-produto>
-    }
+}
+</section>
 }
 <!-- Carrinho -->
 <hr>
