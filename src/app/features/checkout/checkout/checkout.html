@@ -1,0 +1,18 @@
+<h2>Checkout</h2>
+<form [formGroup]="formulario">
+<p><input type="text" formControlName="nome" placeholder="Nome" /></p>
+
+@if(formulario.get('nome')?.touched && formulario.get('nome')?.errors?.['required']){
+    <small style= "color:red;">NOME É OBRIGATÓRIO</small>
+}
+@if(formulario.get('nome')?.errors?.['minLenght']){
+    <small style= "color:red;" >NOME DEVE TER NO MÍNIMO (2) DUAS LETRAS</small>
+}
+@if(formulario.get('nome')?.errors?.['numeroInvalido']){
+    <small style = "color:red;"> NOME NÃO PODE CONTER NUMEROS</small>
+}
+
+<p><input type="email" formControlName="email" placeholder="E-mail" /></p>
+<p><input type="text" formControlName="endereco" placeholder="Endereco" /></p>
+<button type="button" (click)="finalizar()">Finalizar Compra</button>
+</form>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Produto } from '../produto/produto';
 import { signal } from '@angular/core';
 import { computed } from '@angular/core';
@@ -6,7 +6,7 @@ import { PrecoFormatadoPipe } from '../../../shared/pipes/preco-formatado-pipe';
 import { effect } from '@angular/core';
 import { UpperCasePipe } from '@angular/common';
 import { produtosService } from '../produtos.service';
-import { inject } from '@angular/core';
+import { CarrinhoService } from '../../../core/services/carrinho.service';
 
 @Component({
   selector: 'app-lista-produtos',
@@ -35,12 +35,6 @@ erro = signal < string | null > (null);
     total + item.preco,0
   )});
 
-  quantidadeCarrinho = computed(() => this.carrinho().length);
-
-  totalCarrinho = computed(() => {
-    return this.carrinho().reduce((total, item) =>
-    total + item.preco,0
-  )});
 
   //? ============== MÉTODO HTTP CLIENT (API) ============
 
@@ -92,10 +86,7 @@ erro = signal < string | null > (null);
     ]);
   }
 
-   adicionarAoCarrinho(produto:{nome: string; preco: number}){
-      this.carrinho.update(listaAtual => [...listaAtual, produto]   
-        );
-          }
+  
 
 //?================ MÉTODO SET() ======================
   //!função para substituir a lista atual usando o metodo set()
@@ -120,4 +111,13 @@ erro = signal < string | null > (null);
 
 private produtosService = inject(produtosService);
 
+public carrinhoService= inject(CarrinhoService);
+
+quantidadeCarrinho = this.carrinhoService.quantidadeItens;
+
+totalCarrinho = this.carrinhoService.totalItens;
+
+adicionarAoCarrinho(produto: {nome: string; preco: number }){
+  this.carrinhoService.adicionar(produto);
+ }
 }
