@@ -1,6 +1,13 @@
 import { CanActivateFn } from "@angular/router";
-import { usuarioLogado } from "./auth";
+import { AuthService } from "./services/auth.services"; 
+import {inject} from "@angular/core"
+import { Router } from "express";
 
 export const authGuard: CanActivateFn = () => {
-    return usuarioLogado();
+    const authService = inject(AuthService);
+    const router = inject(Router);
+    if(authService.usuarioLogado()){
+        return true;
+    }
+    return router.createUrlTree(['/login']);
 };
