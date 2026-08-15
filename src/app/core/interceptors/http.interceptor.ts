@@ -1,39 +1,51 @@
-import { HttpInterceptorFn } from "@angular/common/http";
-import { tap } from "rxjs";
-import { catchError } from "rxjs";
-import { throwError } from "rxjs";
+import { inject } from '@angular/core';
+import { HttpInterceptorFn } from '@angular/common/http';
+import { tap, catchError, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.services';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
-    
-    console.log('Inteceptando Requisição: ', req.url);
-    //! Aqui você pode adicionar lógica para modificar a requisição antes de enviá-la, como adicionar cabeçalhos, tokens de autenticação, etc.
-    const token = 'fake-token-jwt';
-    
-    const novaReq = req.clone({
+  const authService = inject(AuthService);
+  const router=inject(Router);
+  const token = authService.obterToken();
+
+  // LOG REQUEST
+  console.log('REQUEST', req.url);
+
+  // TOKEN
+  const novaReq = token
+    ? req.clone({
         setHeaders: {
-            Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-    });
-    return next(novaReq).pipe(
-        tap({
-            next: (event) => console.log('Responde: ', event),
-            error: (error) => console.error('Erro de Requisição: ', error)
-        }),
-        catchError((error) =>{
+      })
+    : req;
 
-            console.error('Erro de Requisição Global:',error);
+  // SEGUE COM A NOVA REQUEST + LOG RESPONSE
+  return next(novaReq).pipe(
+    tap({
+      next: (event) => console.log('RESPONSE:', event),
+      error: (error) => console.error('ERRO:', error),
+    }),
 
-            if(error.status ===401){
+    catchError((error) => {
+      console.error('ERRO GLOBAL:', error);
 
-            console.warn('erro de autenticaçao de usuario');
+      if (error.status === 401) {
+        console.warn('Não autorizado!');
+        authService.logout();
+        router.navigateByUrl('/login')
+      }
 
-            }
+      if (error.status === 500) {
+        console.warn('Erro interno do servidor!');
+      }
+      if(error.status === 403){
+        console.warn('Acesso Proibido,Usuario sem Permissão!');
+        router.navigateByUrl('/produto');
+      }
 
-            if (error.status === 500){
-
-            console.warn('Erro interno do servidor', error);
-            }
-            return throwError(() => error);
-        }),
-    );
+      return throwError(() => error);
+    }),
+  );
 };

@@ -1,19 +1,28 @@
-import { Component } from '@angular/core';
-import{MatToolbarModule} from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import{CarrinhoService} from '../../../core/services/carrinho.service';
-import {inject} from '@angular/core';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+
+import { CarrinhoService } from '../../../core/services/carrinho.service';
+import { AuthService } from '../../../core/services/auth.services';
+
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, MatToolbarModule, MatButtonModule],
+  imports: [MatToolbarModule, MatButtonModule, RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
 export class Header {
-  nomeloja = 'pezao tec';
-
   private carrinhoService = inject(CarrinhoService);
+  private authService = inject(AuthService);
 
-  quantidadeHeader = this.carrinhoService.quantidadeItens;
+  quantidade = this.carrinhoService.quantidadeItens;
+
+  estaLogado = this.authService.estaLogado;
+
+  usuarioAtual = this.authService.usuarioAtual;
+
+  sair() {
+    this.authService.logout();
+  }
 }

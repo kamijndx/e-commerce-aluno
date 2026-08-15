@@ -1,11 +1,5 @@
 <app-header></app-header>
+
 <main class="container-principal">
-
-  <section class="bloco-controle">
-<button mat-raised-button clor="primary" (click)="authService.login()">Login</button>
-<button nat-raised-button color="acent" (click)="authService.logout()">Logout</button>
-<p>Status {{authService.usuarioLogado() ? 'Logado' : 'Deslogado'}}</p>
-</section>
-
-<router-outlet></router-outlet>  
+  <router-outlet></router-outlet>
 </main>

@@ -1,32 +1,55 @@
-import {Injectable,signal,computed} from "@angular/core"
-type Usuario={
+import { Injectable, computed, signal } from '@angular/core';
 
-    email:string;
-    perfil:string
-}
+type PerfilUsuario  = 'usuario' | 'admin';
+
+type Usuario = {
+  email: string;
+  perfil: PerfilUsuario;
+};
+
 @Injectable({
-
-    providedIn: 'root'
+  providedIn: 'root',
 })
+export class AuthService {
 
-export class AuthService{
+  private usuario = signal<Usuario | null>(null);
+  private tokenJwt = signal<string | null>(null);
 
-    private usuario = signal<string | null>(null)
-    private tokenJwt = signal<string | null>(null)
+  usuarioAtual = computed(() => this.usuario());
+  estaLogado = computed(() => this.usuario() !== null);
+  token = computed(() => this.tokenJwt());
+  admin =computed (()=>this.usuario()?.perfil === 'admin');
 
-    //!computed//
-    usuarioAtual = computed(()=> this.usuario());
-    usuarioLogado =computed(()=>this.usuario() ! == null);
-    token = computed(()=> this.tokenJwt());
+  login(email: string, senha: string): boolean {
+    if (!email || !senha) {
+      return false;
+    }
 
-login(){}
+    const perfil: PerfilUsuario = email=='admin@email.com.br'? 'admin': 'usuario'
+    const tokenSimulado =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
+      'eyJzdWIiOiJhbHVub0B0ZXN0ZS5jb20iLCJwZXJmaWwiOiJ1c3VhcmlvIn0.' +
+      'assinatura-simulada';
 
-logout(){
+    this.usuario.set({
+      email,
+      perfil, 
+       });
+
+    this.tokenJwt.set(tokenSimulado);
+
+    return true;
+  }
+
+  logout() {
     this.usuario.set(null);
     this.tokenJwt.set(null);
-}
+  }
 
-obterToken(): string | null {
+  obterToken(): string | null {
     return this.tokenJwt();
-}
+  }
+  obterPerfil():PerfilUsuario | null{
+    return this.usuario()?.perfil?? null;
+  }
 }
