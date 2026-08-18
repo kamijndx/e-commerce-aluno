@@ -10,3 +10,7 @@ flex:1 1 auto;
     button{
         margin-left: 8px;
     }
+    .email-usuario{
+        font-size: 17px;
+        color:rgb(238, 7, 84)
+    }
