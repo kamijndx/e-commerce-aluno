@@ -50,12 +50,14 @@ export const routes: Routes = [
      path:'admin',
   canActivate: [adminGuard],
   loadComponent: ()=>
-    import('./features/admin/admin/admin').then((m) => m.Admin)
+    import('./features/admin/admin/admin')
+  .then((m) => m.Admin)
   },
 {
     path:'acesso-negado',
     loadComponent: () =>
-      import('./features/acesso-negado/acesso-negado/acesso-negado').then((m) => m.AcessoNegado)
+      import('./features/acesso-negado/acesso-negado/acesso-negado')
+    .then((m) => m.AcessoNegado)
 },
  {
     path: '**',
