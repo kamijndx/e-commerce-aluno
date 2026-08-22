@@ -1,7 +1,7 @@
 import { Routes } from "@angular/router";
-import { authGuard } from "./core/auth.guard";
+import { authGuard } from "./core/guards/auth.guard";
 import { Checkout } from "./features/checkout/checkout/checkout";
-import { adminGuard } from "./core/admin.guards";
+import { adminGuard } from "./core/guards/admin.guards";
 
 export const routes: Routes = [
   {

@@ -7,7 +7,7 @@ import { AuthService} from "../services/auth.services";
     private authService = inject(AuthService);
 
   usuarioAtual = this.authService.usuarioAtual;
-  estaLogado = this.authService.estaLogado;
+  estaLogado = this.authService. usuarioLogado;
   token =  this.authService.token;
   admin =this.authService.admin;
 

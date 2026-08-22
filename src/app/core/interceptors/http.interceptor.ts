@@ -1,18 +1,15 @@
 import { inject } from '@angular/core';
 import { HttpInterceptorFn } from '@angular/common/http';
-import { tap, catchError, throwError } from 'rxjs';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.services';
+import { tap, catchError, throwError } from 'rxjs';
+import { AuthFacade } from '../facades/auth.facade';
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
-  const router=inject(Router);
-  const token = authService.obterToken();
+  const authFacade = inject(AuthFacade);
+  const router = inject(Router);
 
-  // LOG REQUEST
-  console.log('REQUEST', req.url);
+  const token = authFacade.obterToken();
 
-  // TOKEN
   const novaReq = token
     ? req.clone({
         setHeaders: {
@@ -21,30 +18,18 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
       })
     : req;
 
-  // SEGUE COM A NOVA REQUEST + LOG RESPONSE
   return next(novaReq).pipe(
     tap({
-      next: (event) => console.log('RESPONSE:', event),
       error: (error) => console.error('ERRO:', error),
     }),
-
     catchError((error) => {
-      console.error('ERRO GLOBAL:', error);
-
       if (error.status === 401) {
-        console.warn('Não autorizado!');
-        authService.logout();
-        router.navigateByUrl('/login')
+        authFacade.sair();
+        router.navigateByUrl('/login');
       }
-
-      if (error.status === 500) {
-        console.warn('Erro interno do servidor!');
+      if (error.status === 403) {
+        router.navigateByUrl('/produtos');
       }
-      if(error.status === 403){
-        console.warn('Acesso Proibido,Usuario sem Permissão!');
-        router.navigateByUrl('/produto');
-      }
-
       return throwError(() => error);
     }),
   );

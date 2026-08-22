@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component,inject } from '@angular/core';
+import { CarrinhoFacade } from '../../../core/facades/carrinho.facade';
 @Component({
   selector: 'app-carrinho',
   imports: [],
@@ -7,6 +7,17 @@ import { Component } from '@angular/core';
   styleUrl: './carrinho.css',
 })
 export class Carrinho {
-  //! Lógica de carrinho virá na proximas aulas
-  //! Por ora, apenas exibe a página carrinho
+carrinhoFacade =inject(CarrinhoFacade);
+removerItem(index: number) {
+  this.carrinhoFacade.removerItem(index);
+}
+
+limparCarrinho() {
+  this.carrinhoFacade.limparCarrinho();
+}
+
+cancelarCompra() {
+  this.carrinhoFacade.limparCarrinho();
+  // depois adicione navegação, ex: this.router.navigate(['/produtos']);
+}
 }

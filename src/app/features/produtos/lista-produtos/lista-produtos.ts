@@ -2,15 +2,14 @@ import { Component, inject } from '@angular/core';
 import { Produto } from '../produto/produto';
 import { signal } from '@angular/core';
 import { computed } from '@angular/core';
-import { PrecoFormatadoPipe } from '../../../shared/pipes/preco-formatado-pipe';
 import { effect } from '@angular/core';
-import { UpperCasePipe } from '@angular/common';
 import { produtosService } from '../produtos.service';
-import { CarrinhoService } from '../../../core/services/carrinho.service';
+import { MatButtonModule } from '@angular/material/button';
+import { CarrinhoFacade } from '../../../core/facades/carrinho.facade';
 
 @Component({
   selector: 'app-lista-produtos',
-  imports: [Produto, PrecoFormatadoPipe, UpperCasePipe],
+  imports: [Produto, MatButtonModule],
   templateUrl: './lista-produtos.html',
   styleUrl: './lista-produtos.css',
 })
@@ -111,13 +110,13 @@ erro = signal < string | null > (null);
 
 private produtosService = inject(produtosService);
 
-public carrinhoService= inject(CarrinhoService);
+public carrinhoFacade= inject(CarrinhoFacade);
 
-quantidadeCarrinho = this.carrinhoService.quantidadeItens;
+quantidadeCarrinho = this.carrinhoFacade.quantidade;
 
-totalCarrinho = this.carrinhoService.totalItens;
+totalCarrinho = this.carrinhoFacade.total;
 
 adicionarAoCarrinho(produto: {nome: string; preco: number }){
-  this.carrinhoService.adicionar(produto);
+  this.carrinhoFacade.adicionarProduto(produto);
  }
 }
